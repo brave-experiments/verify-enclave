@@ -10,3 +10,5 @@ require (
 	github.com/x448/float16 v0.8.4 // indirect
 	go.mozilla.org/cose v0.0.0-20200930124131-25dc96df8228 // indirect
 )
+
+replace github.com/hf/nitrite => ../nitrite
