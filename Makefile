@@ -13,4 +13,4 @@ verify:
 	@./attest-enclave.sh $(CODE)
 
 clean:
-	rm -f $(binary)
+	rm -f $(binary) Dockerfile
