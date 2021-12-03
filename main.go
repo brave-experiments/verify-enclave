@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"crypto/rand"
-	"crypto/tls"
 	"encoding/base64"
 	"flag"
 	"fmt"
@@ -21,9 +20,6 @@ const (
 )
 
 func fetchAttestationDocument(nonce, attestationEndpoint string) ([]byte, error) {
-
-	// TODO: remove this:
-	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
 	resp, err := http.PostForm(attestationEndpoint, url.Values{"nonce": {nonce}})
 	if err != nil {
