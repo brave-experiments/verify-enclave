@@ -1,12 +1,14 @@
 #!/bin/bash
 
-if [ "$1" = "" ]
+usage="Did you run 'make verify CODE=/path/to/code ENCLAVE=https://example.com'?"
+
+if [ $# -ne 2 ]
 then
-    echo "Missing CODE argument.  Did you run 'make verify CODE=/path/to/ia2'?" >&2
+    echo "Missing arguments.  Did you run 'make verify CODE=/path/to/code ENCLAVE=https://example.com'?" >&2
     exit 1
 fi
 ia2_path="$1"
-
+enclave="$2"
 ia2_image=$(cd "$ia2_path" && ko publish --local . 2>/dev/null)
 
 cat > Dockerfile <<EOF
@@ -28,7 +30,7 @@ local_pcr0=$(docker run -ti -v /var/run/docker.sock:/var/run/docker.sock "$verif
              jq --raw-output ".Measurements.PCR0")
 
 # Request attestation document from the enclave.
-remote_pcr0=$(./fetch-attestation 2>/dev/null)
+remote_pcr0=$(./fetch-attestation -url "$enclave" 2>/dev/null)
 
 if [ "$local_pcr0" = "$remote_pcr0" ]
 then

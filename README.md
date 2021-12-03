@@ -22,4 +22,4 @@ Usage
 
 To attest the enclave, run the following:
 
-    make verify CODE=/path/to/ia2/
+    make verify CODE=/path/to/ia2/ ENCLAVE=https://example.com/attest

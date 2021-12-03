@@ -17,12 +17,10 @@ import (
 )
 
 const (
-	// TODO: fix url
-	attestationEndpoint = "https://nitro.nymity.ch:8080/attest"
-	nonceSize           = 20 // Nonce size in bytes.
+	nonceSize = 20 // Nonce size in bytes.
 )
 
-func fetchAttestationDocument(nonce string) ([]byte, error) {
+func fetchAttestationDocument(nonce, attestationEndpoint string) ([]byte, error) {
 
 	// TODO: remove this:
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
@@ -47,11 +45,12 @@ func fetchAttestationDocument(nonce string) ([]byte, error) {
 }
 
 func main() {
-	var attestationFile string
+	var attestationFile, attestationEndpoint string
 	var err error
 	var rawDoc []byte
 
 	flag.StringVar(&attestationFile, "file", "", "File that contains a Base64-encoded attestation document.")
+	flag.StringVar(&attestationEndpoint, "url", "", "Attestation endpoint of the Nitro enclave..")
 	flag.Parse()
 
 	nonce := make([]byte, nonceSize)
@@ -67,7 +66,7 @@ func main() {
 		}
 		log.Printf("Read attestation document from file.")
 	} else {
-		rawDoc, err = fetchAttestationDocument(fmt.Sprintf("%x", nonce))
+		rawDoc, err = fetchAttestationDocument(fmt.Sprintf("%x", nonce), attestationEndpoint)
 		if err != nil {
 			log.Fatal(err)
 		}

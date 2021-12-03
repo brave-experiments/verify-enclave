@@ -10,7 +10,7 @@ lint:
 
 verify:
 	@go build -o $(binary) .
-	@./attest-enclave.sh $(CODE)
+	@./attest-enclave.sh $(CODE) $(ENCLAVE)
 
 clean:
 	rm -f $(binary) Dockerfile
