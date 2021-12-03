@@ -25,7 +25,11 @@ func fetchAttestationDocument(nonce, attestationEndpoint string) ([]byte, error)
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			log.Printf("Failed to close HTTP response body: %s", err)
+		}
+	}()
 
 	b64Doc, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
