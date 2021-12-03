@@ -10,7 +10,7 @@ lint:
 
 verify:
 	@go build -o $(binary) .
-	@./attest-enclave.sh
+	@./attest-enclave.sh $(CODE)
 
 clean:
 	rm -f $(binary)

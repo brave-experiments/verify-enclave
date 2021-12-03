@@ -1,6 +1,13 @@
 #!/bin/bash
 
-ia2_image=$(cd /home/phw/rcs/ia2 && ko publish --local . 2>/dev/null)
+if [ "$1" = "" ]
+then
+    echo "Missing CODE argument.  Did you run 'make verify CODE=/path/to/ia2'?" >&2
+    exit 1
+fi
+ia2_path="$1"
+
+ia2_image=$(cd "$ia2_path" && ko publish --local . 2>/dev/null)
 
 cat > Dockerfile <<EOF
 FROM public.ecr.aws/amazonlinux/amazonlinux:2
