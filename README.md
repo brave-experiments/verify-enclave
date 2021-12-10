@@ -23,3 +23,7 @@ Usage
 To attest the enclave, run the following:
 
     make verify CODE=/path/to/ia2/ ENCLAVE=https://example.com/attest
+
+For attestation to succeed, your version of both [Go](https://go.dev) and
+[ko](https://github.com/google/ko) must be identical to the versions that have
+been used to compile the remotely running enclave.
