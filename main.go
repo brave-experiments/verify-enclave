@@ -9,7 +9,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 
 	"github.com/hf/nitrite"
@@ -21,7 +20,8 @@ const (
 
 func fetchAttestationDocument(nonce, attestationEndpoint string) ([]byte, error) {
 
-	resp, err := http.PostForm(attestationEndpoint, url.Values{"nonce": {nonce}})
+	attestationEndpoint += fmt.Sprintf("?nonce=%s", nonce)
+	resp, err := http.Get(attestationEndpoint)
 	if err != nil {
 		return nil, err
 	}
