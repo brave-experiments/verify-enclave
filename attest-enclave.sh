@@ -1,10 +1,8 @@
 #!/bin/bash
 
-usage="Did you run 'make verify CODE=/path/to/code ENCLAVE=https://example.com'?"
-
 if [ $# -ne 2 ]
 then
-    echo "Missing arguments.  Did you run 'make verify CODE=/path/to/code ENCLAVE=https://example.com'?" >&2
+    echo "Missing arguments.  Did you run 'make verify CODE=/path/to/code ENCLAVE=https://example.com/attestation'?" >&2
     exit 1
 fi
 ia2_path="$1"
