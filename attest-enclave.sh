@@ -7,6 +7,7 @@ then
 fi
 repository="$1"
 enclave="$2"
+echo "[+] Building reproducible reference image.  This may take a while." >&2
 repro_image=$(cd "$repository" && make --no-print-directory docker 2>/dev/null)
 
 cat > Dockerfile <<EOF
@@ -26,11 +27,13 @@ EOF
 # We're using --no-cache because AWS's nitro-cli may update, at which point the
 # builder image will use an outdated copy, which will result in an unexpected
 # PCR0 value.
+echo "[+] Building builder image." >&2
 builder_image=$(docker build --no-cache --quiet . | cut -d ':' -f 2)
 local_pcr0=$(docker run -ti -v /var/run/docker.sock:/var/run/docker.sock \
              "$builder_image" | jq --raw-output ".Measurements.PCR0")
 
 # Request attestation document from the enclave.
+echo "[+] Fetching remote attestation." >&2
 remote_pcr0=$(./fetch-attestation -url "$enclave" 2>/dev/null)
 
 if [ "$local_pcr0" = "$remote_pcr0" ]
