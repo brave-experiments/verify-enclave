@@ -5,9 +5,9 @@ then
     echo "Missing arguments.  Did you run 'make verify CODE=/path/to/code ENCLAVE=https://example.com/attestation'?" >&2
     exit 1
 fi
-ia2_path="$1"
+repository="$1"
 enclave="$2"
-ia2_image=$(cd "$ia2_path" && ko publish --local . 2>/dev/null)
+repro_image=$(cd "$repository" && make --no-print-directory docker 2>/dev/null)
 
 cat > Dockerfile <<EOF
 FROM public.ecr.aws/amazonlinux/amazonlinux:2
@@ -20,12 +20,15 @@ RUN nitro-cli -V
 
 # Now turn the local Docker image into an Enclave Image File (EIF).
 CMD ["/bin/bash", "-c", \
-     "nitro-cli build-enclave --docker-uri $ia2_image --output-file dummy.eif 2>/dev/null"]
+     "nitro-cli build-enclave --docker-uri $repro_image --output-file dummy.eif 2>/dev/null"]
 EOF
 
-verify_image=$(docker build --quiet . | cut -d ':' -f 2)
-local_pcr0=$(docker run -ti -v /var/run/docker.sock:/var/run/docker.sock "$verify_image" | \
-             jq --raw-output ".Measurements.PCR0")
+# We're using --no-cache because AWS's nitro-cli may update, at which point the
+# builder image will use an outdated copy, which will result in an unexpected
+# PCR0 value.
+builder_image=$(docker build --no-cache --quiet . | cut -d ':' -f 2)
+local_pcr0=$(docker run -ti -v /var/run/docker.sock:/var/run/docker.sock \
+             "$builder_image" | jq --raw-output ".Measurements.PCR0")
 
 # Request attestation document from the enclave.
 remote_pcr0=$(./fetch-attestation -url "$enclave" 2>/dev/null)
