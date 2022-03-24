@@ -31,6 +31,10 @@ func fetchAttestationDocument(nonce, attestationEndpoint string) ([]byte, error)
 		}
 	}()
 
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("attestation handler returned HTTP %d", resp.StatusCode)
+	}
+
 	b64Doc, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
