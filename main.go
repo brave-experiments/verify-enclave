@@ -59,20 +59,20 @@ func main() {
 
 	nonce := make([]byte, nonceSize)
 	if _, err := rand.Read(nonce); err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to read random bytes: %s", err)
 	}
 	log.Printf("Created random nonce: %x", nonce)
 
 	if attestationFile != "" {
 		rawDoc, err = os.ReadFile(attestationFile)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("Failed to read attestatil file: %s", err)
 		}
 		log.Printf("Read attestation document from file.")
 	} else {
 		rawDoc, err = fetchAttestationDocument(fmt.Sprintf("%x", nonce), attestationEndpoint)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("Failed to fetch attestation document: %s", err)
 		}
 		log.Printf("Fetched attestation document from enclave.")
 	}
