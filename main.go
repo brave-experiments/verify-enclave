@@ -55,7 +55,7 @@ func main() {
 	var rawDoc []byte
 
 	flag.StringVar(&attestationFile, "file", "", "File that contains a Base64-encoded attestation document.")
-	flag.StringVar(&attestationEndpoint, "url", "", "Attestation endpoint of the Nitro enclave..")
+	flag.StringVar(&attestationEndpoint, "url", "", "Attestation endpoint of the Nitro enclave.")
 	flag.BoolVar(&debug, "debug", false, "Print extra debug information.")
 	flag.Parse()
 
