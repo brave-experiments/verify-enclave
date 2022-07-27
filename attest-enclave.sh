@@ -9,6 +9,7 @@ repository="$1"
 enclave="$2"
 echo "[+] Building reproducible reference image.  This may take a while." >&2
 repro_image=$(cd "$repository" && make --no-print-directory docker 2>/dev/null)
+repro_image=$(echo "$repro_image" | grep -oP ":\s\w+:" | grep -oP "\w+")
 
 cat > Dockerfile <<EOF
 FROM public.ecr.aws/amazonlinux/amazonlinux:2
