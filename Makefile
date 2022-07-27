@@ -2,6 +2,8 @@
 
 binary = fetch-attestation
 
+SCRIPT_PATH:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+
 test:
 	go test -cover ./...
 
@@ -10,7 +12,7 @@ lint:
 
 verify:
 	@go build -o $(binary) .
-	@./attest-enclave.sh $(CODE) $(ENCLAVE)
+	@$(SCRIPT_PATH)/attest-enclave.sh $(CODE) $(ENCLAVE)
 
 clean:
 	rm -f $(binary) Dockerfile
