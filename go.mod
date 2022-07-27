@@ -1,4 +1,4 @@
-module github.com/blocky/attest-enclave
+module github.com/brave-experiments/attest-enclave
 
 go 1.17
 
